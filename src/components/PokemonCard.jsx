@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import FavoriteButton from "./FavoriteButton";
 
 export default function PokemonCard({ pokemon }) {
   if (!pokemon) return null;
@@ -6,7 +7,7 @@ export default function PokemonCard({ pokemon }) {
   return (
     <Link
       to={`/detail/${pokemon.id}`}
-      className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4 flex flex-col items-center hover:shadow-xl hover:-translate-y-1 transition-transform duration-200"
+      className="bg-white relative rounded-2xl shadow-lg border border-gray-200 p-4 flex flex-col items-center hover:shadow-xl hover:-translate-y-1 transition-transform duration-200"
     >
       {/* 이미지 영역 */}
       <div className="bg-gradient-to-tr from-slate-100 to-slate-200 w-28 h-28 rounded-full flex items-center justify-center shadow-inner">
@@ -33,6 +34,11 @@ export default function PokemonCard({ pokemon }) {
             {t.type.name}
           </span>
         ))}
+
+        {/* 찜 버튼 */}
+        <div className="absolute top-2 right-2">
+          <FavoriteButton pokemonId={pokemon.id} />
+        </div>
       </div>
     </Link>
   );

@@ -8,13 +8,16 @@ const favoritesSlice = createSlice({
       const id = action.payload;
       const index = state.indexOf(id);
       if (index === -1) {
-        state.push(id); // 없으면 추가
+        state.push(id);
       } else {
-        state.splice(index, 1); // 있으면 제거
+        state.splice(index, 1);
       }
     },
   },
 });
 
 export const { toggleFavorite } = favoritesSlice.actions;
+
+export const selectFavoritePokemons = (state) => state.favorites;
+
 export default favoritesSlice.reducer;

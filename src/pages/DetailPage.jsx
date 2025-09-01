@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleFavorite } from "../RTK/favoritesSlice";
+import FavoriteButton from "../components/FavoriteButton";
 
 export default function DetailPage() {
   const { id } = useParams();
@@ -31,20 +32,13 @@ export default function DetailPage() {
           alt={pokemon.name}
           className="w-40 h-40 drop-shadow-md"
         />
-        <h2 className="text-4xl font-extrabold capitalize text-slate-800 mt-4">
+        <h2 className="flex items-end text-4xl font-extrabold capitalize text-slate-800 my-4">
           {pokemon.name}
+          <small className="text-lg text-gray-500">#{pokemon.id}</small>
         </h2>
-        <p className="text-gray-500">#{pokemon.id}</p>
 
         {/* 찜하기 버튼 */}
-        <button
-          onClick={() => dispatch(toggleFavorite(pokemon.id))}
-          className={`px-5 py-2 rounded-full flex items-center gap-2 font-medium transition ${
-            isFavorite ? "bg-rose-500 text-white" : "bg-gray-200 text-gray-700"
-          }`}
-        >
-          {isFavorite ? "❤️ 찜됨" : "🤍 찜하기"}
-        </button>
+        <FavoriteButton pokemonId={pokemon.id} />
       </div>
 
       {/* 타입 */}
