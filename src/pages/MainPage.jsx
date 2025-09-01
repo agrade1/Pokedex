@@ -1,11 +1,13 @@
-import { useOutletContext } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import PokemonCard from "../components/PokemonCard";
 import { fetchPokemons } from "../RTK/pokemonSlice";
-import { useEffect } from "react";
 
 export default function MainPage() {
-  const { search } = useOutletContext(); // ✅ App에서 내려준 search 받음
+  const [sp] = useSearchParams();
+  const query = (sp.get("query") ?? "").trim().toLowerCase(); // ✅ URL 파라미터에서 query 읽기
+
   const dispatch = useDispatch();
   const { list, status } = useSelector((state) => state.pokemon);
 
@@ -18,8 +20,9 @@ export default function MainPage() {
   if (status === "loading") return <p>로딩 중...</p>;
   if (status === "failed") return <p>데이터 불러오기 실패</p>;
 
-  const filtered = search
-    ? list.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
+  // 검색어 기반 필터링
+  const filtered = query
+    ? list.filter((p) => p.name.toLowerCase().includes(query))
     : list;
 
   return (
@@ -27,7 +30,7 @@ export default function MainPage() {
       {filtered.map((pokemon) => (
         <PokemonCard key={pokemon.id} pokemon={pokemon} />
       ))}
-      {search && filtered.length === 0 && (
+      {query && filtered.length === 0 && (
         <p className="col-span-full text-center text-gray-500">
           검색 결과가 없습니다 😢
         </p>

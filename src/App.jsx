@@ -1,7 +1,6 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-// debounce 훅
 function useDebounce(value, delay = 1000) {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
@@ -17,8 +16,21 @@ export default function App() {
     { id: 2, title: "Favorites", to: "/favorites" },
   ];
 
-  const [search, setSearch] = useState("");
-  const debounced = useDebounce(search, 500);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+
+  const [input, setInput] = useState(params.get("query") ?? "");
+  const debounced = useDebounce(input, 1000);
+
+  // ✅ 검색어가 debounce되면 URL에 반영
+  useEffect(() => {
+    if (debounced) {
+      navigate(`/?query=${debounced}`);
+    } else {
+      navigate(`/`);
+    }
+  }, [debounced, navigate]);
 
   return (
     <>
@@ -30,8 +42,8 @@ export default function App() {
           <input
             type="text"
             placeholder="포켓몬 검색..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
             className="ml-6 px-3 py-1 rounded-lg text-black"
           />
         </div>
@@ -58,8 +70,7 @@ export default function App() {
       </header>
 
       <main className="p-6">
-        {/* Outlet에 prop 내려주기 */}
-        <Outlet context={{ search: debounced }} />
+        <Outlet />
       </main>
     </>
   );
