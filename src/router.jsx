@@ -4,7 +4,7 @@ import App from "./App";
 
 const Main = lazy(() => import("./pages/MainPage"));
 const Detail = lazy(() => import("./pages/DetailPage"));
-const Search = lazy(() => import("./pages/SearchPage"));
+// const Search = lazy(() => import("./pages/SearchPage"));
 const Favorites = lazy(() => import("./pages/FavoritesPage"));
 
 const router = createBrowserRouter([
@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Main /> },
       { path: "detail/:id", element: <Detail /> },
-      { path: "search", element: <Search /> },
+      // { path: "search", element: <Search /> },
       { path: "favorites", element: <Favorites /> },
     ],
   },

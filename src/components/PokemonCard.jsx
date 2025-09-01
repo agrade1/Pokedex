@@ -19,7 +19,7 @@ export default function PokemonCard({ pokemon }) {
 
       {/* 이름 + ID */}
       <h3 className="capitalize font-bold text-lg mt-3 text-slate-800 tracking-wide">
-        {pokemon.name}
+        {pokemon.name} / {pokemon.name_ko}
       </h3>
       <p className="text-xs text-gray-500">#{pokemon.id}</p>
 

@@ -3,10 +3,11 @@ import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import PokemonCard from "../components/PokemonCard";
 import { fetchPokemons } from "../RTK/pokemonSlice";
+import { getRegExp } from "korean-regexp";
 
 export default function MainPage() {
-  const [sp] = useSearchParams();
-  const query = (sp.get("query") ?? "").trim().toLowerCase(); // ✅ URL 파라미터에서 query 읽기
+  const [searchParams] = useSearchParams();
+  const query = (searchParams.get("query") ?? "").trim();
 
   const dispatch = useDispatch();
   const { list, status } = useSelector((state) => state.pokemon);
@@ -20,10 +21,19 @@ export default function MainPage() {
   if (status === "loading") return <p>로딩 중...</p>;
   if (status === "failed") return <p>데이터 불러오기 실패</p>;
 
-  // 검색어 기반 필터링
-  const filtered = query
-    ? list.filter((p) => p.name.toLowerCase().includes(query))
-    : list;
+  let filtered = list;
+
+  if (query) {
+    const regex = getRegExp(query, { initialSearch: true });
+
+    filtered = list.filter((p) => {
+      // ✅ 영어 이름 검사
+      if (p.name.toLowerCase().includes(query.toLowerCase())) return true;
+      // ✅ 한글 이름이 있으면 거기도 검사
+      if (p.name_ko && regex.test(p.name_ko)) return true;
+      return false;
+    });
+  }
 
   return (
     <section className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
